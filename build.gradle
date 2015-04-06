@@ -1,0 +1,23 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    testCompile "junit:junit:${project.'junit.version'}"
+}
+
+jar {
+    from("src/main/javascript") {
+        into "META-INF/resources/js"
+    }
+}
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+task wrapper(type: Wrapper) {
+    gradleVersion = 2.3
+}
