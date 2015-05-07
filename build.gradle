@@ -1,5 +1,9 @@
-apply plugin: 'java'
-apply plugin: 'maven'
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'signing'
+    id 'com.jfrog.bintray' version '1.1'
+}
 
 repositories {
     jcenter()
@@ -17,6 +21,62 @@ jar {
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+publish.dependsOn signArchives
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            pom.packaging = 'jar'
+            artifacts = configurations.archives.artifacts
+        }
+    }
+    repositories {
+        maven { url "$buildDir/repo"}
+    }
+}
+
+bintray {
+    user = project.bintrayUsername
+    key = project.bintrayAPIKey
+    publications = ['mavenJava']
+    dryRun = false
+    publish = true
+    pkg {
+        repo = 'maven'
+        name = project.name
+        userOrg = 'uniconiam'
+        desc = 'A library to support Duo Security authentication in Java'
+        websiteUrl = 'https://github.com/UniconLabs/duo_java'
+        vcsUrl = 'https://github.com/UniconLabs/duo_java.git'
+        licenses = ['BSD']
+        version {
+            name = project.version
+            mavenCentralSync {
+                sync = false
+            }
+        }
+    }
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = 2.3
