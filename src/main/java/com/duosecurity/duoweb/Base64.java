@@ -1071,6 +1071,7 @@ public class Base64 {
 	 * @param source
 	 *            The Base64 encoded data
 	 * @return decoded data
+	 * @throws java.io.IOException should not occur
 	 * @since 2.3.1
 	 */
 	public static byte[] decode(byte[] source) throws java.io.IOException {
@@ -1322,7 +1323,7 @@ public class Base64 {
 		 * <pre>
 		 *   ENCODE or DECODE: Encode or Decode as data is read.
 		 *   DO_BREAK_LINES: don't break lines at 76 characters
-		 *     (only meaningful when encoding)</i>
+		 *     (only meaningful when encoding)
 		 * </pre>
 		 * <p>
 		 * Example: <code>new Base64.OutputStream( out, Base64.ENCODE )</code>
